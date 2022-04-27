@@ -22,8 +22,8 @@ namespace Veterinary.web.Models
         public string Neighborhood { get; set; }
 
         public ICollection<Pet> Pets { get; set; }
-        [DisplayName("Departments Number")]
-        public int DepartmentsNumber => Pets == null ? 0 : Pets.Count;
+        [DisplayName("Pets Number")]
+        public int PetsNumber => Pets == null ? 0 : Pets.Count;
 
     }
 }

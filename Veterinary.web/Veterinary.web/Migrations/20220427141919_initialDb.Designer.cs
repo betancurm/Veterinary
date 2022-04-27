@@ -12,8 +12,8 @@ using Veterinary.web.Data;
 namespace Veterinary.web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220401064507_pets")]
-    partial class pets
+    [Migration("20220427141919_initialDb")]
+    partial class initialDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,9 +33,11 @@ namespace Veterinary.web.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullName")
@@ -44,12 +46,15 @@ namespace Veterinary.web.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Identification")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Neighborhood")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -69,35 +74,42 @@ namespace Veterinary.web.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Age")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Allergy")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Colour")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Date")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Gender")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("OwnerId")
                         .HasColumnType("int");
 
                     b.Property<string>("PetName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Race")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Remarks")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Weight")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -110,6 +122,32 @@ namespace Veterinary.web.Migrations
                     b.ToTable("Pets");
                 });
 
+            modelBuilder.Entity("Veterinary.web.Models.Veterinarian", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("PetId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VeterinarianName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("PetId");
+
+                    b.ToTable("Veterinarians");
+                });
+
             modelBuilder.Entity("Veterinary.web.Models.Pet", b =>
                 {
                     b.HasOne("Veterinary.web.Models.Owner", null)
@@ -117,9 +155,21 @@ namespace Veterinary.web.Migrations
                         .HasForeignKey("OwnerId");
                 });
 
+            modelBuilder.Entity("Veterinary.web.Models.Veterinarian", b =>
+                {
+                    b.HasOne("Veterinary.web.Models.Pet", null)
+                        .WithMany("Veterinarians")
+                        .HasForeignKey("PetId");
+                });
+
             modelBuilder.Entity("Veterinary.web.Models.Owner", b =>
                 {
                     b.Navigation("Pets");
+                });
+
+            modelBuilder.Entity("Veterinary.web.Models.Pet", b =>
+                {
+                    b.Navigation("Veterinarians");
                 });
 #pragma warning restore 612, 618
         }
